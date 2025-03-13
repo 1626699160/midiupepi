@@ -22,8 +22,9 @@
         }
 
         video, canvas {
-            width: 320px; /* 进一步缩小视频和画布大小 */
-            height: 240px;
+            width: 100%; /* 视频和画布宽度自适应 */
+            max-width: 320px; /* 最大宽度320px */
+            height: auto; /* 保持视频的宽高比 */
             border: 1px solid #ccc;
             border-radius: 8px;
             background-color: #000;
@@ -56,7 +57,7 @@
     </style>
 </head>
 <body>
-    <h2>Mediapipe 手势识别 - Ubuntu</h2>
+    <h2>Mediapipe 手势识别</h2>
     <video id="video" autoplay playsinline></video>
     <canvas id="output"></canvas>
     <br><br>
@@ -94,7 +95,16 @@
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(stream => {
                     videoElement.srcObject = stream;
-                    videoElement.onloadeddata = () => {
+                    videoElement.onloadedmetadata = () => {
+                        const videoWidth = videoElement.videoWidth;
+                        const videoHeight = videoElement.videoHeight;
+
+                        // Set the canvas and video element size based on the actual video resolution
+                        canvasElement.width = videoWidth;
+                        canvasElement.height = videoHeight;
+                        videoElement.width = videoWidth;
+                        videoElement.height = videoHeight;
+
                         processVideo();
                     };
                 })
